@@ -332,8 +332,11 @@ void mw_max30102_process_sample(uint32_t ir, sensor_raw_t *out)
 void mw_max30102_get_raw(sensor_raw_t *out)
 {
     uint8_t wr, rd;
-    mw_max30102_read_reg(MAX_REG_FIFO_WR_PTR, &wr);
-    mw_max30102_read_reg(MAX_REG_FIFO_RD_PTR, &rd);
+    if (mw_max30102_read_reg(MAX_REG_FIFO_WR_PTR, &wr) != ESP_OK ||
+        mw_max30102_read_reg(MAX_REG_FIFO_RD_PTR, &rd) != ESP_OK) {
+        ESP_LOGW(TAG, "FIFO pointer read failed");
+        return;
+    }
     uint8_t samples = (wr - rd) & 0x1F;
 
     if (samples == 0) {
@@ -343,9 +346,13 @@ void mw_max30102_get_raw(sensor_raw_t *out)
         return;
     }
 
-    uint8_t fifo[6];
+    /* In HR-only mode each FIFO sample is 3 bytes (IR only).
+     * Reading 6 bytes per sample silently skips every second sample and
+     * distorts timing/shape, which can keep peak detection from qualifying
+     * and leave BPM stuck at 0. */
+    uint8_t fifo[3];
     for (uint8_t i = 0; i < samples; i++) {
-        if (mw_max30102_read_fifo(fifo, 6) != ESP_OK) break;
+        if (mw_max30102_read_fifo(fifo, sizeof(fifo)) != ESP_OK) break;
         uint32_t ir = (((uint32_t)(fifo[0] & 0x03)) << 16)
                       | ((uint32_t)fifo[1] << 8)
                       | fifo[2];
