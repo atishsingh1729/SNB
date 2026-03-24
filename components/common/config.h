@@ -1,55 +1,33 @@
 /*
- * main.h
- *
- *  Created on: Dec 10, 2025
- *      Author: Dheeraj.Jain
+ * config.h
+ * Project-wide compile-time configuration.
+ * All pin numbers, addresses, and tuning knobs live here.
  */
 
-#ifndef CONFIG_H_
-#define CONFIG_H_
+#ifndef COMMON_CONFIG_H_
+#define COMMON_CONFIG_H_
 
+#include "driver/gpio.h"
 
+/* ── Debug ───────────────────────────────────────────────────── */
+#define DEBUG_LOGS              0   /* 1 = verbose sensor prints  */
 
-#define I2C_SDA_GPIO 		GPIO_NUM_8
-#define I2C_SCL_GPIO 		GPIO_NUM_9
-#define I2C_SPEED_HZ      	100000
+/* ── Battery ─────────────────────────────────────────────────── */
+#define BATT_AVG_SAMPLES        16  /* rolling average window     */
+#define ADC_BATT_GAIN           1.033f
 
-#define PIN_NUM_MISO  		GPIO_NUM_11
-#define PIN_NUM_MOSI  		GPIO_NUM_13
-#define PIN_NUM_CLK   		GPIO_NUM_12
-#define PIN_NUM_CS    		GPIO_NUM_10
-#define PIN_NUM_WP			GPIO_NUM_14
-#define PIN_NUM_F_HLD		GPIO_NUM_21
+/* ── CPU stats buffer ────────────────────────────────────────── */
+#define STATS_BUFFER_SIZE       1024
 
-#define MAX30102_ADDR		0x57
-#define BNO085_ADDR			0x4B
+/* ── BNO085 feature timing ───────────────────────────────────── */
+#define STEP_FREQ_UPDATE_WIN_SEC  2.0f
+#define VAR_WINDOW_SIZE           100   /* 1 s @ 100 Hz            */
 
-#define UART_PORT 			UART_NUM_0
-#define UART_BUF  			512
+/* ── FFT / Respiration ───────────────────────────────────────── */
+#define FFT_SIZE                1024
+#define SAMPLE_RATE             100.0f  /* Hz                      */
+#define RESP_FREQ_MIN_HZ        0.15f
+#define RESP_FREQ_MAX_HZ        0.80f
+#define RESP_MAG_THRESHOLD      0.01f
 
-#define LED_GPIO 			GPIO_NUM_16
-
-
-// Set this to true to see AC waveform plot, false for BPM detection
-#define PLOT_AC_SIGNAL 				false
-#define DEBUG__LOGS 				false
-
-//NTC based Temp 
-#define ADC_CHANNEL_BODY			0
-#define ADC_CHANNEL_AMB				6
-#define ADC_CHANNEL_BATT			5
-
-#define BATT_AVG_SAMPLES  		    16   // 16 cycles × 3 sec = 48 sec smoothing
-
-//Static buffer for CPU usage
-#define STATS_BUFFER_SIZE 1024  // Usually 300-1000 bytes
-
-//
-#define BNO085_RST_PIN			GPIO_NUM_38
-#define BNO085_INT_PIN			GPIO_NUM_48
-
-//
-#define STEP_FREQ_UPDATE_WIN_SEC		2.0f
-#define VAR_WINDOW_SIZE 				100   // 1 second @100Hz
-
-#endif /* CONFIG_H_ */
+#endif /* COMMON_CONFIG_H_ */

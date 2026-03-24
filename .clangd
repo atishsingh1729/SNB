@@ -1,3 +1,3 @@
 CompileFlags:
-  CompilationDatabase: D:\ESP32_Workspace\SmartNeckBand_WiFi_UDPServer\build
+  CompilationDatabase: D:\ESP32_Workspace\smart_neckband\build
   Remove: [-m*, -f*]

@@ -1,17 +1,42 @@
 idf_component_register(
     SRCS
         "main.c"
-        "peripherial_init.c"
-        "../components/ble/ble.c"
-        "Feature_processing/feature_processing.c"
-        "sensor_data_processing/data_processing.c"
-        "../components/imu/bno085.c"
-        "../components/hr/max30102.c"
-        "struct_2_json.c"
-        "../components/ext_flash/w25q64jv.c"
+        "sensor_processing/sensor_processing.c"
+        "data_pipeline/data_pipeline.c"
+        "streaming/streaming.c"
+        "app/feature_processing/feature_processing.c"
+        "app/feature_processing/feature_processing_feed.c"
+
     INCLUDE_DIRS
         "."
-        "Feature_processing"
+        "sensor_processing"
+        "data_pipeline"
+        "streaming"
+        "app/feature_processing"
 
-    REQUIRES bt nvs_flash json esp_adc driver
+    REQUIRES
+        hal_adc
+        hal_i2c
+        hal_spi
+        hal_gpio
+        mw_bno085
+        mw_max30102
+        mw_ntc
+        mw_flash
+        raw_data_reader
+        file_reader
+        common
+        bt
+        nvs_flash
+        json
+        esp-dsp
+        esp_wifi
+        esp_netif
+        esp_event
+        esp_timer
+        lwip
+        driver
+        freertos
+        log
+        efuse
 )
